@@ -18,9 +18,28 @@ async function getWeatherData(cityValue){
       throw new Error("City not found");
     }
     const data = await response.json();
-  } catch (error) {
 
-    const data = await response.json();
-    console.log(data);
-}
+    const temperature = Math.round(data.main.temp);
+    const weatherDescription = data.weather[0].description;
+    const weatherIcon = data.weather[0].icon;
+    const details = [`Feels like: ${Math.round(data.main.feels_like)}°C`, `Humidity: ${Math.round(data.main.humidity)}%`, `Wind: ${Math.round(data.wind.speed)} km/h`,
+    `Pressure: ${Math.round(data.main.pressure)} hPa`];
+
+    weatherData.querySelector(".icon").innerHTML = `<img src="http://openweathermap.org/img/wn/${weatherIcon}.png" alt="Weather Icon">`;
+
+    weatherData.querySelector(".temperature").textContent = `${temperature}°C`;
+
+    weatherData.querySelector(".description").textContent = weatherDescription;
+
+    weatherData.querySelector(".details").innerHTML = details
+      .map((detail) => `<div>${detail}</div>`)
+      .join("");
+  } catch (error) {
+    weatherData.querySelector(".icon").innerHTML = "";
+    weatherData.querySelector(".temperature").textContent = "";
+    weatherData.querySelector(".description").textContent =
+      "An error happened, please try again later";
+
+    weatherData.querySelector(".details").innerHTML = "";
+  }
 }
